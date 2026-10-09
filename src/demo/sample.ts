@@ -22,7 +22,7 @@ export const DEMO_ARTICLE: ArticleMeta = {
   title: 'راهنمای مهندسی پرامپت: از صفر تا تولید محتوای حرفه‌ای با LLM',
   siteName: 'مجله توسعه‌دهندگان',
   byline: 'سارا محمدی',
-  publishedTime: '2025-11-02T09:30:00Z',
+  publishedTime: '2026-10-09T09:30:00Z',
   lang: 'fa',
   dir: 'rtl',
   readerable: true,
