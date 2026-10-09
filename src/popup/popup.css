@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .icon-btn {
+    @apply flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-500 transition hover:border-zinc-300 hover:text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-700 dark:hover:text-zinc-100;
+  }
+
+  .tab-btn {
+    @apply rounded-lg px-3 py-1.5 text-xs font-bold text-zinc-500 transition dark:text-zinc-400;
+  }
+  .tab-btn[aria-selected='true'] {
+    @apply bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-white;
+  }
+
+  .pill {
+    @apply rounded-full border px-3 py-1 text-[11px] font-bold transition;
+  }
+  .pill[aria-pressed='true'] {
+    @apply border-emerald-500 bg-emerald-500 text-white shadow-sm shadow-emerald-500/30;
+  }
+  .pill[aria-pressed='false'] {
+    @apply border-zinc-200 bg-white text-zinc-600 hover:border-emerald-400 hover:text-emerald-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-emerald-500/50 dark:hover:text-emerald-400;
+  }
+
+  .stat-card {
+    @apply rounded-xl border border-zinc-200 bg-white px-1 py-2 text-center dark:border-zinc-800 dark:bg-zinc-900;
+  }
+  .stat-value {
+    @apply text-sm font-extrabold tabular-nums;
+  }
+  .stat-label {
+    @apply mt-0.5 text-[9.5px] font-semibold text-zinc-400;
+  }
+
+  .send-btn {
+    @apply flex items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 py-2 text-[11px] font-bold text-zinc-600 transition hover:border-emerald-400 hover:text-emerald-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:border-emerald-500/50 dark:hover:text-emerald-400;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100;
+  }
+
+  .preset-card {
+    @apply block cursor-pointer rounded-xl border border-zinc-200 bg-white p-3 transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700;
+  }
+  .preset-card:has(input:checked) {
+    @apply border-emerald-500 ring-1 ring-emerald-500/40;
+  }
+
+  .switch-track {
+    @apply relative h-5 w-9 shrink-0 rounded-full bg-zinc-300 transition-colors dark:bg-zinc-700;
+  }
+  .switch-dot {
+    @apply absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform;
+  }
+}
+
+.peer:checked ~ .switch-track {
+  @apply bg-emerald-500;
+}
+.peer:checked ~ .switch-track .switch-dot {
+  transform: translateX(16px);
+}
+
+.scroll-slim::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.scroll-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: rgb(161 161 170 / 0.35);
+}
+.scroll-slim::-webkit-scrollbar-thumb:hover {
+  background: rgb(161 161 170 / 0.6);
+}
+
+.toast {
+  @apply pointer-events-none absolute bottom-3 left-1/2 z-40 -translate-x-1/2 translate-y-2 rounded-full bg-zinc-900 px-4 py-2 text-[11px] font-bold text-white opacity-0 shadow-xl transition-all duration-200 dark:bg-white dark:text-zinc-900;
+}
+.toast.show {
+  @apply translate-y-0 opacity-100;
+}

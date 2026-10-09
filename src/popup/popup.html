@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page2LLM</title>
+  </head>
+  <body class="w-[384px] bg-zinc-50 font-sans text-zinc-800 antialiased dark:bg-zinc-950 dark:text-zinc-100">
+    <div id="app" class="relative flex h-[560px] flex-col overflow-hidden">
+      <header class="flex items-center gap-3 px-4 py-3">
+        <img src="../icons/icon48.png" alt="Page2LLM" class="h-9 w-9 rounded-xl shadow-sm ring-1 ring-zinc-200 dark:ring-zinc-700" />
+        <div class="min-w-0 flex-1">
+          <h1 class="text-sm font-extrabold tracking-tight">Page2LLM</h1>
+          <p data-i18n="tagline" class="truncate text-[10.5px] leading-4 text-zinc-500 dark:text-zinc-400"></p>
+        </div>
+        <button id="btn-lang" type="button" data-i18n-title="langToggle" class="icon-btn text-[10px] font-extrabold">
+          <span id="lang-label">EN</span>
+        </button>
+        <button id="btn-theme" type="button" data-i18n-title="themeToggle" class="icon-btn">
+          <svg id="icon-moon" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <svg id="icon-sun" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+          </svg>
+        </button>
+      </header>
+      <div class="h-px bg-gradient-to-l from-emerald-500/70 via-teal-400/40 to-transparent" aria-hidden="true"></div>
+
+      <section id="site-info" class="flex items-center gap-2 px-4 pt-3 pb-1">
+        <span id="site-title" class="min-w-0 truncate text-xs font-bold"></span>
+        <span id="site-host" class="ms-auto shrink-0 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400"></span>
+      </section>
+
+      <nav class="mx-4 mt-2 grid grid-cols-2 gap-1 rounded-xl bg-zinc-100 p-1 dark:bg-zinc-900" role="tablist" aria-label="Page2LLM">
+        <button id="tab-btn-preview" type="button" role="tab" aria-selected="true" aria-controls="panel-preview" data-i18n="tabPreview" class="tab-btn"></button>
+        <button id="tab-btn-presets" type="button" role="tab" aria-selected="false" aria-controls="panel-presets" data-i18n="tabPresets" class="tab-btn"></button>
+      </nav>
+
+      <main class="mt-3 min-h-0 flex-1 px-4">
+        <section id="panel-preview" role="tabpanel" aria-labelledby="tab-btn-preview" class="flex h-full flex-col gap-2.5">
+          <div class="grid grid-cols-4 gap-2">
+            <div class="stat-card">
+              <div id="stat-words" class="stat-value">—</div>
+              <div class="stat-label" data-i18n="statWords"></div>
+            </div>
+            <div class="stat-card">
+              <div id="stat-tokens" class="stat-value">—</div>
+              <div class="stat-label" data-i18n="statTokens"></div>
+            </div>
+            <div class="stat-card">
+              <div id="stat-chars" class="stat-value">—</div>
+              <div class="stat-label" data-i18n="statChars"></div>
+            </div>
+            <div class="stat-card">
+              <div id="stat-read" class="stat-value">—</div>
+              <div class="stat-label" data-i18n="statRead"></div>
+            </div>
+          </div>
+
+          <div id="preset-pills" class="flex flex-wrap gap-1.5"></div>
+
+          <p id="fallback-notice" data-i18n="fallbackNotice" class="hidden rounded-lg border border-amber-300/60 bg-amber-50 px-2.5 py-1.5 text-[10px] font-semibold leading-4 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400"></p>
+
+          <div class="relative min-h-0 flex-1">
+            <pre id="preview" dir="auto" class="scroll-slim h-full w-full overflow-y-auto whitespace-pre-wrap break-words rounded-xl border border-zinc-200 bg-white p-3 text-[12px] leading-6 text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"></pre>
+          </div>
+        </section>
+
+        <section id="panel-presets" role="tabpanel" aria-labelledby="tab-btn-presets" class="scroll-slim hidden h-full flex-col gap-4 overflow-y-auto pb-3">
+          <div>
+            <h2 data-i18n="presetsTitle" class="mb-2 text-[11px] font-bold text-zinc-400"></h2>
+            <div id="preset-list" class="flex flex-col gap-2"></div>
+          </div>
+
+          <hr class="border-zinc-200 dark:border-zinc-800" />
+
+          <div class="flex flex-col gap-2">
+            <h2 data-i18n="optionsTitle" class="text-[11px] font-bold text-zinc-400"></h2>
+            <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-3 py-2.5 transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
+              <span class="text-xs font-semibold" data-i18n="includeMeta"></span>
+              <input id="opt-meta" type="checkbox" class="peer sr-only" />
+              <span class="switch-track" aria-hidden="true"><span class="switch-dot"></span></span>
+            </label>
+            <label class="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-zinc-200 bg-white px-3 py-2.5 transition hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700">
+              <span class="text-xs font-semibold" data-i18n="stripImages"></span>
+              <input id="opt-images" type="checkbox" class="peer sr-only" />
+              <span class="switch-track" aria-hidden="true"><span class="switch-dot"></span></span>
+            </label>
+          </div>
+
+          <hr class="border-zinc-200 dark:border-zinc-800" />
+
+          <div class="flex flex-col gap-2">
+            <h2 data-i18n="addPresetTitle" class="text-[11px] font-bold text-zinc-400"></h2>
+            <form id="preset-form" class="flex flex-col gap-2" novalidate>
+              <input id="preset-name" type="text" maxlength="40" data-i18n-placeholder="presetNamePh" class="input" />
+              <textarea id="preset-template" rows="4" data-i18n-placeholder="presetTemplatePh" class="input scroll-slim resize-none"></textarea>
+              <p class="text-[10px] leading-4 text-zinc-400" data-i18n="templateHint"></p>
+              <button id="preset-save" type="submit" class="flex items-center justify-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 text-xs font-bold text-emerald-700 transition hover:bg-emerald-500/20 dark:text-emerald-400">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                <span data-i18n="savePreset"></span>
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer class="mt-auto border-t border-zinc-200 px-4 py-3 dark:border-zinc-800">
+        <button id="btn-copy" type="button" class="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-l from-emerald-500 to-teal-500 px-4 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-emerald-500/25 transition hover:brightness-105 active:scale-[0.99]">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          <span id="copy-label" data-i18n="copy"></span>
+        </button>
+        <div class="mt-2 grid grid-cols-2 gap-2">
+          <button id="btn-chatgpt" type="button" class="send-btn">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+            </svg>
+            <span>ChatGPT</span>
+          </button>
+          <button id="btn-claude" type="button" class="send-btn">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+              <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+              <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+              <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+            </svg>
+            <span>Claude</span>
+          </button>
+        </div>
+      </footer>
+
+      <div id="status-loading" class="absolute inset-0 z-30 hidden flex flex-col items-center justify-center gap-3 bg-zinc-50/90 backdrop-blur-sm dark:bg-zinc-950/90">
+        <div class="h-8 w-8 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" aria-hidden="true"></div>
+        <p class="text-xs font-semibold text-zinc-500 dark:text-zinc-400" data-i18n="loading"></p>
+      </div>
+
+      <div id="status-error" class="absolute inset-0 z-30 hidden flex flex-col items-center justify-center gap-3 bg-zinc-50/95 px-8 text-center backdrop-blur-sm dark:bg-zinc-950/95">
+        <svg class="h-9 w-9 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          <path d="M12 9v4M12 17h.01" />
+        </svg>
+        <p id="error-text" class="text-xs font-semibold leading-5 text-zinc-600 dark:text-zinc-300"></p>
+        <button id="btn-retry" type="button" data-i18n="retry" class="rounded-xl border border-zinc-300 bg-white px-4 py-1.5 text-xs font-bold text-zinc-700 transition hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-zinc-600"></button>
+      </div>
+
+      <div id="toast" role="status" aria-live="polite" class="toast"></div>
+    </div>
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

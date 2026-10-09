@@ -1,0 +1,33 @@
+{
+  "name": "page2llm",
+  "version": "1.0.0",
+  "description": "Extract clean page text as Markdown, ready for LLMs. Manifest V3, 100% local. | صفحه‌خوان هوش مصنوعی",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "python3 -m http.server 4173 --directory dist"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2",
+    "vazirmatn": "^33.0.3"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.0",
+    "@types/node": "^26.6.4",
+    "@types/turndown": "^5.0.5",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11"
+  }
+}
