@@ -1,121 +1,109 @@
 import { Readability, isProbablyReaderable } from '@mozilla/readability';
 import type { ExtractionPayload } from '../utils/types';
 
-const MSG_EXTRACTED = 'P2L_EXTRACTED';
-const NOISE_SELECTORS =
-  'script, style, noscript, iframe, template, svg, canvas, video, audio, source, track';
+{
+  const MSG_EXTRACTED = 'P2L_EXTRACTED';
+  const MSG_EXTRACTION_ERROR = 'P2L_EXTRACTION_ERROR';
 
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+  const NOISE_SELECTORS = [
+    'nav', 'footer', 'header', 'aside',
+    '.nav', '.navbar', '.footer', '.sidebar', '.menu',
+    '.ad', '.ads', '.advertisement', '.banner',
+    '.social-share', '.share-buttons',
+    '.comments', '.comment-section',
+    '#comments', '#disqus_thread',
+    'script', 'style', 'noscript', 'iframe', 'svg',
+    '[role="navigation"]', '[role="banner"]', '[role="contentinfo"]',
+    '[aria-hidden="true"]',
+  ];
 
-function absoluteUrl(url: string): string {
-  try {
-    return new URL(url, document.baseURI).href;
-  } catch {
-    return url;
+  function escapeHtml(str: string): string {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
-}
 
-function metaContent(names: string[]): string | null {
-  for (const name of names) {
-    const content = document
-      .querySelector(`meta[property="${name}"], meta[name="${name}"]`)
-      ?.getAttribute('content')
-      ?.trim();
-    if (content) return content;
+  function getMetadata(): { title: string; url: string; description: string; author: string } {
+    const title =
+      document.querySelector('meta[property="og:title"]')?.getAttribute('content') ||
+      document.querySelector('meta[name="twitter:title"]')?.getAttribute('content') ||
+      document.title ||
+      '';
+
+    const url =
+      document.querySelector('link[rel="canonical"]')?.getAttribute('href') ||
+      window.location.href;
+
+    const description =
+      document.querySelector('meta[property="og:description"]')?.getAttribute('content') ||
+      document.querySelector('meta[name="description"]')?.getAttribute('content') ||
+      '';
+
+    const author =
+      document.querySelector('meta[name="author"]')?.getAttribute('content') ||
+      document.querySelector('meta[property="article:author"]')?.getAttribute('content') ||
+      '';
+
+    return { title, url, description, author };
   }
-  return null;
-}
 
-function serializeFallback(): string {
-  const text = (document.body?.innerText ?? document.body?.textContent ?? '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-  return text
-    .split(/\n{2,}/)
-    .filter((chunk) => chunk.trim().length > 0)
-    .map((chunk) => `<p>${escapeHtml(chunk.trim()).replace(/\n/g, '<br>')}</p>`)
-    .join('\n');
-}
-
-function extract(): ExtractionPayload {
-  const canonical = document
-    .querySelector('link[rel="canonical"]')
-    ?.getAttribute('href');
-  const url = canonical ? absoluteUrl(canonical) : location.href;
-
-  const clone = document.cloneNode(true) as Document;
-  clone.querySelectorAll(NOISE_SELECTORS).forEach((node) => node.remove());
-
-  const readerable = isProbablyReaderable(clone);
-  const fallbackMeta = {
-    siteName: metaContent(['og:site_name']),
-    byline: metaContent(['author', 'article:author']),
-    publishedTime: metaContent(['article:published_time', 'date', 'pubdate']),
-  };
-
-  let title = document.title.trim();
-  let byline: string | null = fallbackMeta.byline;
-  let html = '';
-  let textLength = 0;
-  let fallback = true;
-
-  if (readerable) {
-    const article = new Readability(clone).parse();
-    if (article?.content) {
-      fallback = false;
-      title = (article.title || title).trim();
-      byline = article.byline?.trim() || fallbackMeta.byline;
-      html = article.content;
-      textLength = (article.textContent ?? '').trim().length;
+  function cleanClone(element: Element): Element {
+    const clone = element.cloneNode(true) as Element;
+    for (const sel of NOISE_SELECTORS) {
+      const nodes = clone.querySelectorAll(sel);
+      nodes.forEach((n) => n.remove());
     }
+    return clone;
   }
 
-  if (fallback) {
-    html = serializeFallback();
-    textLength = (document.body?.innerText ?? '').trim().length;
-  }
+  function extractMainContent(): string {
+    const selectors = [
+      'article',
+      '[role="main"]',
+      'main',
+      '.post-content',
+      '.article-content',
+      '.content',
+      '.entry-content',
+      '#content',
+      '#main',
+    ];
 
-  return {
-    ok: true,
-    url,
-    title: title || url,
-    siteName: fallbackMeta.siteName,
-    byline: byline || null,
-    publishedTime: fallbackMeta.publishedTime,
-    lang: document.documentElement.lang || null,
-    dir: document.documentElement.getAttribute('dir') === 'rtl' ? 'rtl' : 'ltr',
-    readerable,
-    fallback,
-    html,
-    textLength,
-  };
-}
-
-function send(payload: ExtractionPayload): void {
-  try {
-    void chrome.runtime.sendMessage({ type: MSG_EXTRACTED, payload });
-  } catch {
-    /* extension context is gone (popup closed) — nothing to do */
-  }
-}
-
-(async () => {
-  try {
-    if (document.readyState === 'loading') {
-      await new Promise<void>((resolve) =>
-        document.addEventListener('DOMContentLoaded', () => resolve(), {
-          once: true,
-        }),
-      );
+    for (const sel of selectors) {
+      const el = document.querySelector(sel);
+      if (el && el.textContent && el.textContent.trim().length > 200) {
+        return cleanClone(el).outerHTML;
+      }
     }
-    send(extract());
-  } catch (error) {
-    send({ ok: false, reason: error instanceof Error ? error.message : String(error) });
+
+    const bodyClone = cleanClone(document.body);
+    return bodyClone.outerHTML;
   }
-})();
+
+  (async () => {
+    try {
+      const meta = getMetadata();
+      const contentHtml = extractMainContent();
+
+      chrome.runtime.sendMessage({
+        type: MSG_EXTRACTED,
+        payload: {
+          title: meta.title,
+          url: meta.url,
+          description: meta.description,
+          author: meta.author,
+          html: contentHtml,
+        },
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      chrome.runtime.sendMessage({
+        type: MSG_EXTRACTION_ERROR,
+        payload: { error: message },
+      });
+    }
+  })();
+}
