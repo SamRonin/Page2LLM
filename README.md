@@ -52,10 +52,11 @@
 
 1. آخرین نسخه را از صفحه‌ی [Releases](https://github.com/SamRonin/Page2LLM/releases/latest) دانلود کنید (`page2llm-vX.Y.Z-chrome.zip`).
 2. فایل را از حالت فشرده خارج کنید.
-3. در کروم به `chrome://extensions` بروید.
-4. گوشه‌ی بالا-راست **Developer mode** را روشن کنید.
-5. روی **Load unpacked** کلیک کنید و پوشه‌ی خارج‌شده را انتخاب کنید.
-6. آیکون Page2LLM در نوار افزونه‌ها ظاهر می‌شود (در صورت مخفی بودن، روی آیکون پازل کلیک و آن را Pin کنید).
+3. پوشه‌ای با نام Page2LLM بسازید و محتواهای استخراج‌شده را به آن منقل کنید.
+4. در کروم به `chrome://extensions` بروید.
+5. گوشه‌ی بالا-راست **Developer mode** را روشن کنید.
+6. روی **Load unpacked** کلیک کنید و پوشه‌ی خارج‌شده را انتخاب کنید.
+7. آیکون Page2LLM در نوار افزونه‌ها ظاهر می‌شود (در صورت مخفی بودن، روی آیکون پازل کلیک و آن را Pin کنید).
 
 ### روش ۲: ساخت از سورس
 
@@ -176,7 +177,7 @@ page2llm/
 
 ## Installation
 
-**Option 1 — from Releases:** grab `page2llm-vX.Y.Z-chrome.zip` from [Releases](https://github.com/SamRonin/Page2LLM/releases/latest), unzip it, open `chrome://extensions`, enable **Developer mode**, click **Load unpacked** and select the unzipped folder.
+**Option 1 — from Releases:** grab `page2llm-vX.Y.Z-chrome.zip` from [Releases](https://github.com/SamRonin/Page2LLM/releases/latest), unzip it, Create a folder named Page2LLM and move the extracted contents into it, open `chrome://extensions`, enable **Developer mode**, click **Load unpacked** and select the unzipped folder.
 
 **Option 2 — from source:**
 
