@@ -1,6 +1,6 @@
 {
   "name": "page2llm",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Extract clean page text as Markdown, ready for LLMs. Manifest V3, 100% local. | صفحه‌خوان هوش مصنوعی",
   "license": "MIT",
   "type": "module",

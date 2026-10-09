@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Page2LLM — صفحه‌خوان هوش مصنوعی",
   "short_name": "Page2LLM",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "استخراج متن تمیز صفحه و تبدیل به مارک‌داون آماده برای LLM — ۱۰۰٪ محلی | Clean page text → Markdown for LLMs. 100% local.",
   "minimum_chrome_version": "110",
   "icons": {
