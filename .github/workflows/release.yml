@@ -34,7 +34,7 @@ jobs:
           rm -rf page2llm
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: page2llm-*.zip
           generate_release_notes: true
